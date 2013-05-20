@@ -1,5 +1,5 @@
 var request = require('request')
-  , jsonstream = require('jsonstream')
+  , jsonstream = require('JSONStream')
   , headers = {'accept':'application/json'}
   , util = require('util')
   , events = require('events')
