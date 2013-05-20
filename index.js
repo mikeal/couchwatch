@@ -10,7 +10,16 @@ function FollowCouch (url, since) {
   if (url[url.length -1] !== '/') url += '/'
   self.url = url + '_changes?feed=continuous&heartbeat=10000&include_docs=true'
   self.since = since || 0
-  self.init()
+
+  if (self.since === -1) {
+    request.get(url, {json:true}, function (e, resp, body) {
+      if (resp.statusCode !== 200) return self.emit('error', new Error("Status code is not 200, "+resp.statusCode))
+      self.since = body.update_seq
+      self.init()
+    })
+  } else {
+    self.init()
+  }
 }
 util.inherits(FollowCouch, events.EventEmitter)
 FollowCouch.prototype.init = function () {
@@ -26,6 +35,8 @@ FollowCouch.prototype.init = function () {
     var json = jsonstream.parse()
     self.req.pipe(json)
     json.on('data', function (row) {
+      if (row.seq < self.since) return self.emit('error', new Error('Sequence is lower than since.'))
+      if (typeof row.last_seq !== 'undefined') return // Don't know why, this shouldn't happen. Will restart tho.
       self.since = row.seq
       self.emit('row', row)
       self.emit('doc', row.doc)
