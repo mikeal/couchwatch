@@ -1,0 +1,26 @@
+{
+  "name": "couchwatch",
+  "version": "0.1.0",
+  "description": "Fault tolerant CouchDB changes watcher.",
+  "main": "index.js",
+  "dependencies": {
+    "JSONStream": "~0.6.4",
+    "request": "~2.21.0"
+  },
+  "devDependencies": {
+    "cleanup": "~0.2.0"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikeal/couchwatch"
+  },
+  "keywords": [
+    "couchdb",
+    "realtime"
+  ],
+  "author": "Mikeal Rogers",
+  "license": "BSD"
+}
