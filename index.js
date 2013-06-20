@@ -13,6 +13,7 @@ function FollowCouch (url, since) {
 
   if (self.since === -1) {
     request.get(url, {json:true}, function (e, resp, body) {
+      if (e) return self.emit('error', e)
       if (resp.statusCode !== 200) return self.emit('error', new Error("Status code is not 200, "+resp.statusCode))
       self.since = body.update_seq
       self.init()
