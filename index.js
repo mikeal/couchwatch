@@ -3,6 +3,7 @@ var request = require('request')
   , headers = {'accept':'application/json'}
   , util = require('util')
   , events = require('events')
+  , concastack = require('concastack')
   ;
 
 function FollowCouch (url, since) {
@@ -13,7 +14,7 @@ function FollowCouch (url, since) {
 
   if (self.since === -1) {
     request.get(url, {json:true}, function (e, resp, body) {
-      if (e) return self.emit('error', e)
+      if (e) return self.emit('error', concastack(e, new Error()))
       if (resp.statusCode !== 200) return self.emit('error', new Error("Status code is not 200, "+resp.statusCode))
       self.since = body.update_seq
       self.init()
@@ -62,7 +63,7 @@ FollowCouch.prototype.init = function () {
     })
   })
 
-  var errorListener = function (err) {self.emit('error', err)}
+  var errorListener = function (err) {self.emit('error', concastack(err, new Error()))}
   self.req.on('error', errorListener)
 }
 FollowCouch.prototype.kicktimeout = function () {
